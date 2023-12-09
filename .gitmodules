@@ -1,6 +1,7 @@
-[submodule "fmt"]
-	path = fmt
+
+[submodule "dependencies/fmt"]
+	path = dependencies/fmt
 	url = https://github.com/fmtlib/fmt.git
-[submodule "rapidcsv"]
-	path = rapidcsv
+[submodule "dependencies/rapidcsv"]
+	path = dependencies/rapidcsv
 	url = https://github.com/d99kris/rapidcsv.git

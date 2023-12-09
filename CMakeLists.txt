@@ -15,11 +15,11 @@ set(SOURCES
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
-add_subdirectory(fmt)
-add_subdirectory(rapidcsv)
+add_subdirectory(dependencies/fmt)
+add_subdirectory(dependencies/rapidcsv)
 
 # Defina o caminho onde o header do Catch2 será armazenado
-set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/catch)
+set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/catch)
 set(CATCH_HEADER ${CATCH_INCLUDE_DIR}/catch.hpp)
 
 # Verifique se o header do Catch2 já está baixado
@@ -50,8 +50,8 @@ set(INCLUDES
         Processor
         Common
         Types
-        fmt/include
-        rapidcsv/src
+        dependencies/fmt/include
+        dependencies/rapidcsv/src
         ${CATCH_INCLUDE_DIR}
         )
 
@@ -63,7 +63,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     fmt
     rapidcsv
 )
-
 
 #setup tests
 set(TEST_SOURCES tests/main.cpp)
