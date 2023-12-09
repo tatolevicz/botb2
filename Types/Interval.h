@@ -10,6 +10,9 @@
 
 namespace botb2 {
 
+    constexpr char UnknownIntervalErrorMsg[] = "Unknown interval\n";
+    constexpr char ConversionNotPossibleErrorMsg[] = "Conversion not possible!\n";
+
     constexpr uint64_t MillisecondsPerSecond = 1000ull;
     constexpr uint64_t MillisecondsPerMinute = 60 * MillisecondsPerSecond;
     constexpr uint64_t MillisecondsPerHour = 60 * MillisecondsPerMinute;
@@ -62,7 +65,7 @@ namespace botb2 {
             case Interval::ThousandTicks:
             case Interval::FiveThousandTicks:
             case Interval::TenThousandTicks: {
-                std::cerr << "Conversion not possible!\n";
+                std::cerr << ConversionNotPossibleErrorMsg;
                 return std::nullopt;
             }
             case Interval::OneSecond:
@@ -105,7 +108,7 @@ namespace botb2 {
                 return 30  * MillisecondsPerDay;
             case Interval::Unknown:
             default: {
-                std::cerr << "Unknown interval\n";
+                std::cerr << UnknownIntervalErrorMsg;
                 return std::nullopt;
             }
         }
@@ -154,12 +157,12 @@ namespace botb2 {
             case Interval::ThreeDays:
             case Interval::OneWeek:
             case Interval::OneMonth:{
-                std::cerr << "Conversion not possible!\n";
+                std::cerr << ConversionNotPossibleErrorMsg;
                 return std::nullopt;
             }
             case Interval::Unknown:
             default: {
-                std::cerr << "Unknown interval\n";
+                std::cerr << UnknownIntervalErrorMsg;
                 return std::nullopt;
             }
         }
@@ -202,7 +205,7 @@ namespace botb2 {
             }
             case Interval::Unknown:
             default:
-                std::cerr << "Unknown interval\n";
+                std::cerr << UnknownIntervalErrorMsg;
                 return false;
             }
         }

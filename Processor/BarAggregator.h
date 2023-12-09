@@ -14,14 +14,16 @@ namespace botb2 {
 
     class BarAggregator {
     public:
-        explicit BarAggregator(const Interval& interval);
+        explicit BarAggregator();
         void addTick(const TickData& tick);
         BarData getBarData() const;
         void reset();
 
     private:
-        Interval _interval;
-        std::vector<TickData> _ticks;
+        void updateCurrentBar(const TickData& tick);
+        void resetBar();
+        BarData _currentBar;
+        bool _isNewBar;
     };
 
 } // namespace botb2
