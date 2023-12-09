@@ -62,7 +62,7 @@ namespace botb2 {
             case Interval::ThousandTicks:
             case Interval::FiveThousandTicks:
             case Interval::TenThousandTicks: {
-                std::cerr << "There is no ms for ticks\n";
+                std::cerr << "Conversion not possible!\n";
                 return std::nullopt;
             }
             case Interval::OneSecond:
@@ -153,13 +153,13 @@ namespace botb2 {
             case Interval::OneDay:
             case Interval::ThreeDays:
             case Interval::OneWeek:
-            case Interval::OneMonth:
-            case Interval::Unknown: {
-                std::cerr << "Unknown interval\n";
+            case Interval::OneMonth:{
+                std::cerr << "Conversion not possible!\n";
                 return std::nullopt;
             }
-            default:{
-                std::cerr << "There is no ticks for ms\n";
+            case Interval::Unknown:
+            default: {
+                std::cerr << "Unknown interval\n";
                 return std::nullopt;
             }
         }
