@@ -5,11 +5,11 @@
 #ifndef MAGIATRADE_INTERVAL_H
 #define MAGIATRADE_INTERVAL_H
 
-#include <cassert>
+#include <optional>
+#include <iostream>
 
 namespace botb2 {
-    
-    
+
     enum class Interval {
         FiveTicks,
         TenTicks,
@@ -44,7 +44,7 @@ namespace botb2 {
         Unknown,
     };
 
-    inline static uint64_t toMilliseconds(const Interval &interval) {
+    inline static std::optional<uint64_t> toMilliseconds(const Interval &interval) {
         switch (interval) {
             case Interval::FiveTicks:
             case Interval::TenTicks:
@@ -56,8 +56,10 @@ namespace botb2 {
             case Interval::FiveHundredTicks:
             case Interval::ThousandTicks:
             case Interval::FiveThousandTicks:
-            case Interval::TenThousandTicks:
-                assert(false && "There is no ms for ticks");
+            case Interval::TenThousandTicks: {
+                std::cerr << "There is no ms for ticks");
+                return std::nullopt;
+            }
             case Interval::OneSecond:
                 return 1000;
             case Interval::FiveSeconds:
@@ -97,12 +99,14 @@ namespace botb2 {
             case Interval::OneMonth:
                 return static_cast<uint64_t>(30)  * 24 * 60 * 60000;
             case Interval::Unknown:
-            default:
-                assert(false && "Unknown interval");
+            default: {
+                std::cerr << "Unknown interval");
+                return std::nullopt;
+            }
         }
     }
 
-    inline static uint64_t toTicks(const Interval &interval) {
+    inline static std::optional<uint64_t> toTicks(const Interval &interval) {
         switch (interval) {
             case Interval::FiveTicks:
                 return 5;
@@ -145,10 +149,14 @@ namespace botb2 {
             case Interval::ThreeDays:
             case Interval::OneWeek:
             case Interval::OneMonth:
-            case Interval::Unknown:
-                assert(false && "There is no ticks for ms");
-            default:
-                assert(false && "Unknown interval");
+            case Interval::Unknown: {
+                std::cerr << "Unknown interval");
+                return std::nullopt;
+            }
+            default:{
+                std::cerr << "There is no ticks for ms");
+                return std::nullopt;
+            }
         }
     }
 
@@ -184,11 +192,14 @@ namespace botb2 {
             case Interval::OneDay:
             case Interval::ThreeDays:
             case Interval::OneWeek:
-            case Interval::OneMonth:
-            case Interval::Unknown:
+            case Interval::OneMonth:{
                 return false;
+            }
+            case Interval::Unknown:
             default:
-                assert(false && "Unknown interval");
+                std::cerr << "Unknown interval");
+                return false;
+            }
         }
     }
 }
