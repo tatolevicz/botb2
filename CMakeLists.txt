@@ -11,7 +11,7 @@ set(SOURCES
         Processor/Tickable.h
         Processor/Tickable.cpp
         Types/Interval.h
-        )
+        Processor/BarAggregator.cpp Processor/BarAggregator.h Types/TickData.h Types/BarData.h Types/TimeValue.h)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
@@ -43,7 +43,10 @@ set(SOURCES
         Processor/Ticker.cpp
         Processor/Tickable.h
         Processor/Tickable.cpp
+        Types/BarData.h
+        Types/TickData.h
         Types/Interval.h
+        Types/TimeValue.h
         )
 
 set(INCLUDES

@@ -8,204 +8,144 @@
 #include <cassert>
 
 namespace botb2 {
-
-    using longl = long long;
-
-    struct TimeValue {
-        double value;
-        longl time;
-
-        //the operators are needed for upper_bound and lower_bound operations
-        bool operator==(TimeValue const &obj) const {
-            return time == obj.time;
-        }
-
-        bool operator>=(TimeValue const &obj) const {
-            return time >= obj.time;
-        }
-
-        bool operator>(TimeValue const &obj) const {
-            return time > obj.time;
-        }
-
-        bool operator<=(TimeValue const &obj) const {
-            return time <= obj.time;
-        }
-
-        bool operator<(TimeValue const &obj) const {
-            return time < obj.time;
-        }
-    };
-
-    struct TickData : public TimeValue {
-        double volume;
-
-        TickData() {
-            volume = 0;
-        }
-    };
-
-    struct BarData : public TickData {
-    public:
-        double open_time_ms = 0;
-        double close_time_ms = 0;
-        double open = 0;
-        double high = 0;
-        double low = 0;
-        double close = 0;
-
-        bool isEmpty() const {
-            // Exemplo: considera a barra vazia se o tempo de abertura ainda é zero
-            // Você pode ajustar esta lógica com base em como você inicializa uma nova BarData
-            return open_time_ms == 0;
-        }
-
-        void clear() {
-            open_time_ms = 0;
-            close_time_ms = 0;
-            open = 0;
-            high = 0;
-            low = 0;
-            close = 0;
-        };
-    };
-
+    
+    
     enum class Interval {
-        Interval_5_ticks,
-        Interval_10_ticks,
-        Interval_15_ticks,
-        Interval_20_ticks,
-        Interval_50_ticks,
-        Interval_100_ticks,
-        Interval_200_ticks,
-        Interval_500_ticks,
-        Interval_1000_ticks,
-        Interval_5000_ticks,
-        Interval_10000_ticks,
-        Interval_1_Second,
-        Interval_5_Seconds,
-        Interval_10_Seconds,
-        Interval_30_Seconds,
-        Interval_1_Minute,
-        Interval_3_Minutes,
-        Interval_5_Minutes,
-        Interval_15_Minutes,
-        Interval_30_Minutes,
-        Interval_1_Hour,
-        Interval_2_Hours,
-        Interval_4_Hours,
-        Interval_6_Hours,
-        Interval_8_Hours,
-        Interval_12_Hours,
-        Interval_1_Day,
-        Interval_3_Days,
-        Interval_1_Week,
-        Interval_1_Month,
-        Interval_Unknown,
+        FiveTicks,
+        TenTicks,
+        FifteenTicks,
+        TwentyTicks,
+        FiftyTicks,
+        HundredTicks,
+        TwoHundredTicks,
+        FiveHundredTicks,
+        ThousandTicks,
+        FiveThousandTicks,
+        TenThousandTicks,
+        OneSecond,
+        FiveSeconds,
+        TenSeconds,
+        ThirtySeconds,
+        OneMinute,
+        ThreeMinutes,
+        FiveMinutes,
+        FifteenMinutes,
+        ThirtyMinutes,
+        OneHour,
+        TwoHours,
+        FourHours,
+        SixHours,
+        EightHours,
+        TwelveHours,
+        OneDay,
+        ThreeDays,
+        OneWeek,
+        OneMonth,
+        Unknown,
     };
 
-    inline static uint64_t toMs(const Interval &interval) {
+    inline static uint64_t toMilliseconds(const Interval &interval) {
         switch (interval) {
-            case Interval::Interval_5_ticks:
-            case Interval::Interval_10_ticks:
-            case Interval::Interval_15_ticks:
-            case Interval::Interval_20_ticks:
-            case Interval::Interval_50_ticks:
-            case Interval::Interval_100_ticks:
-            case Interval::Interval_200_ticks:
-            case Interval::Interval_500_ticks:
-            case Interval::Interval_1000_ticks:
-            case Interval::Interval_5000_ticks:
-            case Interval::Interval_10000_ticks:
+            case Interval::FiveTicks:
+            case Interval::TenTicks:
+            case Interval::FifteenTicks:
+            case Interval::TwentyTicks:
+            case Interval::FiftyTicks:
+            case Interval::HundredTicks:
+            case Interval::TwoHundredTicks:
+            case Interval::FiveHundredTicks:
+            case Interval::ThousandTicks:
+            case Interval::FiveThousandTicks:
+            case Interval::TenThousandTicks:
                 assert(false && "There is no ms for ticks");
-            case Interval::Interval_1_Second:
+            case Interval::OneSecond:
                 return 1000;
-            case Interval::Interval_5_Seconds:
+            case Interval::FiveSeconds:
                 return 5 * 1000;
-            case Interval::Interval_10_Seconds:
+            case Interval::TenSeconds:
                 return 10 * 1000;
-            case Interval::Interval_30_Seconds:
+            case Interval::ThirtySeconds:
                 return 30 * 1000;
-            case Interval::Interval_1_Minute:
+            case Interval::OneMinute:
                 return 60000;
-            case Interval::Interval_3_Minutes:
+            case Interval::ThreeMinutes:
                 return 3 * 60000;
-            case Interval::Interval_5_Minutes:
+            case Interval::FiveMinutes:
                 return 5 * 60000;
-            case Interval::Interval_15_Minutes:
+            case Interval::FifteenMinutes:
                 return 15 * 60000;
-            case Interval::Interval_30_Minutes:
+            case Interval::ThirtyMinutes:
                 return 30 * 60000;
-            case Interval::Interval_1_Hour:
+            case Interval::OneHour:
                 return 60 * 60000;
-            case Interval::Interval_2_Hours:
+            case Interval::TwoHours:
                 return 2 * 60 * 60000;
-            case Interval::Interval_4_Hours:
+            case Interval::FourHours:
                 return 4 * 60 * 60000;
-            case Interval::Interval_6_Hours:
+            case Interval::SixHours:
                 return 6 * 60 * 60000;
-            case Interval::Interval_8_Hours:
+            case Interval::EightHours:
                 return 8 * 60 * 60000;
-            case Interval::Interval_12_Hours:
+            case Interval::TwelveHours:
                 return 12 * 60 * 60000;
-            case Interval::Interval_1_Day:
+            case Interval::OneDay:
                 return 24 * 60 * 60000;
-            case Interval::Interval_3_Days:
+            case Interval::ThreeDays:
                 return static_cast<uint64_t>(3)  * 24 * 60 * 60000;
-            case Interval::Interval_1_Week:
+            case Interval::OneWeek:
                 return static_cast<uint64_t>(7)  * 24 * 60 * 60000;
-            case Interval::Interval_1_Month:
+            case Interval::OneMonth:
                 return static_cast<uint64_t>(30)  * 24 * 60 * 60000;
-            case Interval::Interval_Unknown:
+            case Interval::Unknown:
             default:
                 assert(false && "Unknown interval");
         }
     }
 
-    inline static longl toTicks(const Interval &interval) {
+    inline static uint64_t toTicks(const Interval &interval) {
         switch (interval) {
-            case Interval::Interval_5_ticks:
+            case Interval::FiveTicks:
                 return 5;
-            case Interval::Interval_10_ticks:
+            case Interval::TenTicks:
                 return 10;
-            case Interval::Interval_15_ticks:
+            case Interval::FifteenTicks:
                 return 15;
-            case Interval::Interval_20_ticks:
+            case Interval::TwentyTicks:
                 return 20;
-            case Interval::Interval_50_ticks:
+            case Interval::FiftyTicks:
                 return 50;
-            case Interval::Interval_100_ticks:
+            case Interval::HundredTicks:
                 return 100;
-            case Interval::Interval_200_ticks:
+            case Interval::TwoHundredTicks:
                 return 200;
-            case Interval::Interval_500_ticks:
+            case Interval::FiveHundredTicks:
                 return 500;
-            case Interval::Interval_1000_ticks:
+            case Interval::ThousandTicks:
                 return 1000;
-            case Interval::Interval_5000_ticks:
+            case Interval::FiveThousandTicks:
                 return 5000;
-            case Interval::Interval_10000_ticks:
+            case Interval::TenThousandTicks:
                 return 10000;
-            case Interval::Interval_1_Second:
-            case Interval::Interval_5_Seconds:
-            case Interval::Interval_10_Seconds:
-            case Interval::Interval_30_Seconds:
-            case Interval::Interval_1_Minute:
-            case Interval::Interval_3_Minutes:
-            case Interval::Interval_5_Minutes:
-            case Interval::Interval_15_Minutes:
-            case Interval::Interval_30_Minutes:
-            case Interval::Interval_1_Hour:
-            case Interval::Interval_2_Hours:
-            case Interval::Interval_4_Hours:
-            case Interval::Interval_6_Hours:
-            case Interval::Interval_8_Hours:
-            case Interval::Interval_12_Hours:
-            case Interval::Interval_1_Day:
-            case Interval::Interval_3_Days:
-            case Interval::Interval_1_Week:
-            case Interval::Interval_1_Month:
-            case Interval::Interval_Unknown:
+            case Interval::OneSecond:
+            case Interval::FiveSeconds:
+            case Interval::TenSeconds:
+            case Interval::ThirtySeconds:
+            case Interval::OneMinute:
+            case Interval::ThreeMinutes:
+            case Interval::FiveMinutes:
+            case Interval::FifteenMinutes:
+            case Interval::ThirtyMinutes:
+            case Interval::OneHour:
+            case Interval::TwoHours:
+            case Interval::FourHours:
+            case Interval::SixHours:
+            case Interval::EightHours:
+            case Interval::TwelveHours:
+            case Interval::OneDay:
+            case Interval::ThreeDays:
+            case Interval::OneWeek:
+            case Interval::OneMonth:
+            case Interval::Unknown:
                 assert(false && "There is no ticks for ms");
             default:
                 assert(false && "Unknown interval");
@@ -214,38 +154,38 @@ namespace botb2 {
 
     inline static bool isTickInterval(const Interval &interval) {
         switch (interval) {
-            case Interval::Interval_5_ticks:
-            case Interval::Interval_10_ticks:
-            case Interval::Interval_15_ticks:
-            case Interval::Interval_20_ticks:
-            case Interval::Interval_50_ticks:
-            case Interval::Interval_100_ticks:
-            case Interval::Interval_200_ticks:
-            case Interval::Interval_500_ticks:
-            case Interval::Interval_1000_ticks:
-            case Interval::Interval_5000_ticks:
-            case Interval::Interval_10000_ticks:
+            case Interval::FiveTicks:
+            case Interval::TenTicks:
+            case Interval::FifteenTicks:
+            case Interval::TwentyTicks:
+            case Interval::FiftyTicks:
+            case Interval::HundredTicks:
+            case Interval::TwoHundredTicks:
+            case Interval::FiveHundredTicks:
+            case Interval::ThousandTicks:
+            case Interval::FiveThousandTicks:
+            case Interval::TenThousandTicks:
                 return true;
-            case Interval::Interval_1_Second:
-            case Interval::Interval_5_Seconds:
-            case Interval::Interval_10_Seconds:
-            case Interval::Interval_30_Seconds:
-            case Interval::Interval_1_Minute:
-            case Interval::Interval_3_Minutes:
-            case Interval::Interval_5_Minutes:
-            case Interval::Interval_15_Minutes:
-            case Interval::Interval_30_Minutes:
-            case Interval::Interval_1_Hour:
-            case Interval::Interval_2_Hours:
-            case Interval::Interval_4_Hours:
-            case Interval::Interval_6_Hours:
-            case Interval::Interval_8_Hours:
-            case Interval::Interval_12_Hours:
-            case Interval::Interval_1_Day:
-            case Interval::Interval_3_Days:
-            case Interval::Interval_1_Week:
-            case Interval::Interval_1_Month:
-            case Interval::Interval_Unknown:
+            case Interval::OneSecond:
+            case Interval::FiveSeconds:
+            case Interval::TenSeconds:
+            case Interval::ThirtySeconds:
+            case Interval::OneMinute:
+            case Interval::ThreeMinutes:
+            case Interval::FiveMinutes:
+            case Interval::FifteenMinutes:
+            case Interval::ThirtyMinutes:
+            case Interval::OneHour:
+            case Interval::TwoHours:
+            case Interval::FourHours:
+            case Interval::SixHours:
+            case Interval::EightHours:
+            case Interval::TwelveHours:
+            case Interval::OneDay:
+            case Interval::ThreeDays:
+            case Interval::OneWeek:
+            case Interval::OneMonth:
+            case Interval::Unknown:
                 return false;
             default:
                 assert(false && "Unknown interval");
