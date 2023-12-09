@@ -10,6 +10,11 @@
 
 namespace botb2 {
 
+    constexpr uint64_t MillisecondsPerSecond = 1000ull;
+    constexpr uint64_t MillisecondsPerMinute = 60 * MillisecondsPerSecond;
+    constexpr uint64_t MillisecondsPerHour = 60 * MillisecondsPerMinute;
+    constexpr uint64_t MillisecondsPerDay = 24 * MillisecondsPerHour;
+
     enum class Interval {
         FiveTicks,
         TenTicks,
@@ -57,50 +62,50 @@ namespace botb2 {
             case Interval::ThousandTicks:
             case Interval::FiveThousandTicks:
             case Interval::TenThousandTicks: {
-                std::cerr << "There is no ms for ticks");
+                std::cerr << "There is no ms for ticks\n";
                 return std::nullopt;
             }
             case Interval::OneSecond:
-                return 1000;
+                return MillisecondsPerSecond;
             case Interval::FiveSeconds:
-                return 5 * 1000;
+                return 5 * MillisecondsPerSecond;
             case Interval::TenSeconds:
-                return 10 * 1000;
+                return 10 * MillisecondsPerSecond;
             case Interval::ThirtySeconds:
-                return 30 * 1000;
+                return 30 * MillisecondsPerSecond;
             case Interval::OneMinute:
-                return 60000;
+                return MillisecondsPerMinute;
             case Interval::ThreeMinutes:
-                return 3 * 60000;
+                return 3 * MillisecondsPerMinute;
             case Interval::FiveMinutes:
-                return 5 * 60000;
+                return 5 * MillisecondsPerMinute;
             case Interval::FifteenMinutes:
-                return 15 * 60000;
+                return 15 * MillisecondsPerMinute;
             case Interval::ThirtyMinutes:
-                return 30 * 60000;
+                return 30 * MillisecondsPerMinute;
             case Interval::OneHour:
-                return 60 * 60000;
+                return MillisecondsPerHour;
             case Interval::TwoHours:
-                return 2 * 60 * 60000;
+                return 2 * MillisecondsPerHour;
             case Interval::FourHours:
-                return 4 * 60 * 60000;
+                return 4 *MillisecondsPerHour;
             case Interval::SixHours:
-                return 6 * 60 * 60000;
+                return 6 * MillisecondsPerHour;
             case Interval::EightHours:
-                return 8 * 60 * 60000;
+                return 8 * MillisecondsPerHour;
             case Interval::TwelveHours:
-                return 12 * 60 * 60000;
+                return 12 * MillisecondsPerHour;
             case Interval::OneDay:
-                return 24 * 60 * 60000;
+                return MillisecondsPerDay;
             case Interval::ThreeDays:
-                return static_cast<uint64_t>(3)  * 24 * 60 * 60000;
+                return 3  * MillisecondsPerDay;
             case Interval::OneWeek:
-                return static_cast<uint64_t>(7)  * 24 * 60 * 60000;
+                return 7 * MillisecondsPerDay;
             case Interval::OneMonth:
-                return static_cast<uint64_t>(30)  * 24 * 60 * 60000;
+                return 30  * MillisecondsPerDay;
             case Interval::Unknown:
             default: {
-                std::cerr << "Unknown interval");
+                std::cerr << "Unknown interval\n";
                 return std::nullopt;
             }
         }
@@ -150,11 +155,11 @@ namespace botb2 {
             case Interval::OneWeek:
             case Interval::OneMonth:
             case Interval::Unknown: {
-                std::cerr << "Unknown interval");
+                std::cerr << "Unknown interval\n";
                 return std::nullopt;
             }
             default:{
-                std::cerr << "There is no ticks for ms");
+                std::cerr << "There is no ticks for ms\n";
                 return std::nullopt;
             }
         }
@@ -197,7 +202,7 @@ namespace botb2 {
             }
             case Interval::Unknown:
             default:
-                std::cerr << "Unknown interval");
+                std::cerr << "Unknown interval\n";
                 return false;
             }
         }
