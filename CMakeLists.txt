@@ -49,6 +49,7 @@ endif()
 
 
 set(INCLUDES
+        ./
         Processor
         Processor/TickProcessingStrategies
         Common
@@ -68,7 +69,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 )
 
 #setup tests
-set(TEST_SOURCES tests/main.cpp)
+set(TEST_SOURCES tests/main.cpp tests/MockTickable.h)
 
 add_executable(botb2-tests ${TEST_SOURCES})
 
