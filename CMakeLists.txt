@@ -69,7 +69,11 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 )
 
 #setup tests
-set(TEST_SOURCES tests/main.cpp tests/MockTickable.h)
+set(TEST_SOURCES
+#    tests/main.cpp
+    tests/MockTickable.h
+    tests/debugHelpers.cpp
+    )
 
 add_executable(botb2-tests ${TEST_SOURCES})
 
