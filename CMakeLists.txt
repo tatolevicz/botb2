@@ -27,6 +27,7 @@ set(SOURCES
         Processor/TickProcessingStrategies/TickBasedStrategy.h
         Processor/TickProcessingStrategies/PriceChangeBasedStrategy.cpp
         Processor/TickProcessingStrategies/PriceChangeBasedStrategy.h
+        tests/MockTickable.h
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
