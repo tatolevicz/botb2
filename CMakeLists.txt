@@ -3,6 +3,10 @@ cmake_minimum_required(VERSION 3.12)
 project(botb2 VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
+# Define BUILD_TESTING para ON por padrão
+option(BUILD_TESTING "Build the testing tree." ON)
+
+
 set(SOURCES
         botb2.h
         Common/Utils.h
@@ -68,20 +72,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     rapidcsv
 )
 
-#setup tests
-set(TEST_SOURCES
-#    tests/main.cpp
-    tests/MockTickable.h
-    tests/debugHelpers.cpp
-    )
-
-add_executable(botb2-tests ${TEST_SOURCES})
-
-target_include_directories(botb2-tests PRIVATE
-    ${INCLUDES}
-)
-
-target_link_libraries(botb2-tests PRIVATE
-    ${PROJECT_NAME}
-)
-#------------
+if(BUILD_TESTING)
+    add_subdirectory(tests)
+endif()
