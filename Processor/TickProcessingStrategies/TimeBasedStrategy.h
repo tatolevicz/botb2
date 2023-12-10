@@ -7,11 +7,17 @@
 
 #include "TickProcessingStrategy.h"
 
+
 namespace botb2{
+
     class TimeBasedStrategy : public TickProcessingStrategy {
     public:
         TimeBasedStrategy(const Interval& interval);
-        void processTick(const TickData& tick) override;
+        void processTick(const TickData& tick,Ticker* ticker) override;
+
+    private:
+        uint64_t _lastTime{0};
+        uint64_t _intervalTime{0};
     };
 
 }

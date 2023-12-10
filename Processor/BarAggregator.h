@@ -17,6 +17,7 @@ namespace botb2 {
         void addTick(const TickData& tick);
         BarData getBarData() const;
         void reset();
+        bool isNewBar();
 
     private:
         void updateCurrentBar(const TickData& tick);

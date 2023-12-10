@@ -14,6 +14,10 @@ namespace botb2{
         resetBar();
     }
 
+    bool BarAggregator::isNewBar(){
+        return _isNewBar;
+    }
+
     void BarAggregator::addTick(const TickData& tick){
 
         if (_isNewBar) {

@@ -8,7 +8,7 @@ namespace botb2 {
     TickBasedStrategy::TickBasedStrategy(const Interval& interval):
     TickProcessingStrategy(interval){}
 
-    void TickBasedStrategy::processTick(const TickData& tick) {
+    void TickBasedStrategy::processTick(const TickData& tick,Ticker* ticker) {
 
     }
 }

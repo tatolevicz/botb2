@@ -9,7 +9,6 @@
 #include <memory>
 
 #include "Interval.h"
-
 namespace botb2 {
 
     class ITickable;
@@ -24,6 +23,7 @@ namespace botb2 {
         void addTickable(const std::shared_ptr<ITickable>& tickable);
         void removeTickable(const std::shared_ptr<ITickable>& tickable);
         void tick(const TickData &data);
+        std::unordered_set<std::shared_ptr<ITickable>>& getTickables();
     private:
         std::unique_ptr<TickProcessingStrategy> loadProcessor();
         std::unordered_set<std::shared_ptr<ITickable>> _tickables;

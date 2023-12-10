@@ -7,7 +7,7 @@
 namespace botb2 {
     PriceChangeBasedStrategy::PriceChangeBasedStrategy(const Interval& interval):
     TickProcessingStrategy(interval){}
-    void PriceChangeBasedStrategy::processTick(const TickData& tick) {
+    void PriceChangeBasedStrategy::processTick(const TickData& tick,Ticker* ticker) {
 
     }
 }

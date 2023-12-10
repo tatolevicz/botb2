@@ -29,7 +29,7 @@ namespace botb2 {
     }
 
     void Ticker::tick(const TickData &data) {
-        _processorStrategy->processTick(data);
+        _processorStrategy->processTick(data, this);
     }
 
     std::unique_ptr<TickProcessingStrategy>  Ticker::loadProcessor(){
@@ -43,4 +43,9 @@ namespace botb2 {
 
         return std::move(output);
     }
+
+    std::unordered_set<std::shared_ptr<ITickable>>& Ticker::getTickables(){
+        return _tickables;
+    }
+
 }

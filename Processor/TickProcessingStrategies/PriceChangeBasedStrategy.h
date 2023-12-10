@@ -11,7 +11,7 @@ namespace botb2{
     class PriceChangeBasedStrategy : public TickProcessingStrategy {
     public:
         PriceChangeBasedStrategy(const Interval& interval);
-        void processTick(const TickData& tick) override;
+        void processTick(const TickData& tick,Ticker* ticker) override;
     };
 
 }

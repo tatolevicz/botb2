@@ -10,7 +10,7 @@ namespace botb2{
     class TickBasedStrategy : public TickProcessingStrategy {
     public:
         TickBasedStrategy(const Interval& interval);
-        void processTick(const TickData& tick) override;
+        void processTick(const TickData& tick,Ticker* ticker) override;
     };
 
 }
