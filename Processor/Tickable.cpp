@@ -2,31 +2,31 @@
 // Created by Arthur Abel Motelevicz on 20/07/22.
 //
 
-#include "Tickable.h"
+#include "ITickable.h"
 #include "Utils.h"
 
 namespace botb2 {
-    Tickable::Tickable() {
+    ITickable::ITickable() {
         _id = utils::uuid::generate_uuid_v4();
     }
 
-    Tickable::~Tickable() {}
+    ITickable::~ITickable() {}
 
-    void Tickable::onOpen(const BarData &data) {}
+    void ITickable::onOpen(const BarData &data) {}
 
-    void Tickable::onTick(const BarData &data) {}
+    void ITickable::onTick(const BarData &data) {}
 
-    void Tickable::onClose(const BarData &data) {}
+    void ITickable::onClose(const BarData &data) {}
 
-    void Tickable::setPriority(int priority) {
+    void ITickable::setPriority(int priority) {
         _priority = priority;
     }
 
-    int Tickable::getPriority() const {
+    int ITickable::getPriority() const {
         return _priority;
     }
 
-    const std::string &Tickable::getId() const {
+    const std::string &ITickable::getId() const {
         return _id;
     }
 }

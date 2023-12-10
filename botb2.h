@@ -7,7 +7,7 @@
 
 #include <Utils.h>
 #include <Interval.h>
-#include <Tickable.h>
+#include <ITickable.h>
 #include <Ticker.h>
 
 #endif //MAGIATRADE_BOTB2_H

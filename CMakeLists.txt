@@ -8,7 +8,7 @@ set(SOURCES
         Common/Utils.h
         Processor/Ticker.h
         Processor/Ticker.cpp
-        Processor/Tickable.h
+        Processor/ITickable.h
         Processor/Tickable.cpp
         Types/Interval.h
         Processor/BarAggregator.cpp

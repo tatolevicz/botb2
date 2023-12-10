@@ -15,12 +15,12 @@ namespace botb2 {
     class TickData;
     class BarData;
 
-    class Tickable {
+    class ITickable {
     public:
 
-        Tickable();
+        ITickable();
 
-        virtual ~Tickable();
+        virtual ~ITickable();
 
         virtual void onOpen(const BarData& data);
 
@@ -34,7 +34,7 @@ namespace botb2 {
 
         const std::string& getId() const;
 
-        bool operator<(const std::shared_ptr<Tickable>& rhs) const {
+        bool operator<(const std::shared_ptr<ITickable>& rhs) const {
             return _id < rhs->getId();
         }
 
@@ -45,13 +45,13 @@ namespace botb2 {
     };
 
     struct TickableHash {
-        size_t operator()(const std::shared_ptr<Tickable>& tickable) const {
+        size_t operator()(const std::shared_ptr<ITickable>& tickable) const {
             return std::hash<std::string>()(tickable->getId());
         }
     };
 
     struct TickableEqual {
-        bool operator()(const std::shared_ptr<Tickable>& lhs, const std::shared_ptr<Tickable>& rhs) const {
+        bool operator()(const std::shared_ptr<ITickable>& lhs, const std::shared_ptr<ITickable>& rhs) const {
             return lhs->getId() == rhs->getId();
         }
     };

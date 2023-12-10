@@ -12,7 +12,7 @@
 
 namespace botb2 {
 
-    class Tickable;
+    class ITickable;
     class TickData;
     class TickProcessingStrategy;
 
@@ -21,12 +21,12 @@ namespace botb2 {
         Ticker(const Interval& interval);
 
         virtual ~Ticker();
-        void addTickable(const std::shared_ptr<Tickable>& tickable);
-        void removeTickable(const std::shared_ptr<Tickable>& tickable);
+        void addTickable(const std::shared_ptr<ITickable>& tickable);
+        void removeTickable(const std::shared_ptr<ITickable>& tickable);
         void tick(const TickData &data);
     private:
         std::unique_ptr<TickProcessingStrategy> loadProcessor();
-        std::unordered_set<std::shared_ptr<Tickable>> _tickables;
+        std::unordered_set<std::shared_ptr<ITickable>> _tickables;
         Interval _interval;
         std::unique_ptr<TickProcessingStrategy> _processorStrategy;
     };

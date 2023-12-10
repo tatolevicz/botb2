@@ -3,7 +3,7 @@
 //
 
 #include "Ticker.h"
-#include "Tickable.h"
+#include "ITickable.h"
 #include "TickProcessingStrategy.h"
 
 #include "TimeBasedStrategy.h"
@@ -20,11 +20,11 @@ namespace botb2 {
 
     Ticker::~Ticker() {}
 
-    void Ticker::addTickable(const std::shared_ptr<Tickable>& tickable) {
+    void Ticker::addTickable(const std::shared_ptr<ITickable>& tickable) {
         _tickables.insert(tickable);
     }
 
-    void Ticker::removeTickable(const std::shared_ptr<Tickable>& tickable){
+    void Ticker::removeTickable(const std::shared_ptr<ITickable>& tickable){
         _tickables.erase(tickable);
     }
 
