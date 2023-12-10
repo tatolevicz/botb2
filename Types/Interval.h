@@ -19,6 +19,19 @@ namespace botb2 {
     constexpr uint64_t MillisecondsPerDay = 24 * MillisecondsPerHour;
 
     enum class Interval {
+        Renko_0001_Percent,
+        Renko_0005_Percent,
+        Renko_001_Percent,
+        Renko_005_Percent,
+        Renko_01_Percent,
+        Renko_05_Percent,
+        Renko_1_Percent,
+        Renko_2_Percent,
+        Renko_3_Percent,
+        Renko_5_Percent,
+        Renko_10_Percent,
+        Renko_20_Percent,
+        Renko_30_Percent,
         FiveTicks,
         TenTicks,
         FifteenTicks,
@@ -54,6 +67,19 @@ namespace botb2 {
 
     inline static std::optional<uint64_t> toMilliseconds(const Interval &interval) {
         switch (interval) {
+            case Interval::Renko_0001_Percent:
+            case Interval::Renko_0005_Percent:
+            case Interval::Renko_001_Percent:
+            case Interval::Renko_005_Percent:
+            case Interval::Renko_01_Percent:
+            case Interval::Renko_05_Percent:
+            case Interval::Renko_1_Percent:
+            case Interval::Renko_2_Percent:
+            case Interval::Renko_3_Percent:
+            case Interval::Renko_5_Percent:
+            case Interval::Renko_10_Percent:
+            case Interval::Renko_20_Percent:
+            case Interval::Renko_30_Percent:
             case Interval::FiveTicks:
             case Interval::TenTicks:
             case Interval::FifteenTicks:
@@ -138,6 +164,19 @@ namespace botb2 {
                 return 5000;
             case Interval::TenThousandTicks:
                 return 10000;
+            case Interval::Renko_0001_Percent:
+            case Interval::Renko_0005_Percent:
+            case Interval::Renko_001_Percent:
+            case Interval::Renko_005_Percent:
+            case Interval::Renko_01_Percent:
+            case Interval::Renko_05_Percent:
+            case Interval::Renko_1_Percent:
+            case Interval::Renko_2_Percent:
+            case Interval::Renko_3_Percent:
+            case Interval::Renko_5_Percent:
+            case Interval::Renko_10_Percent:
+            case Interval::Renko_20_Percent:
+            case Interval::Renko_30_Percent:
             case Interval::OneSecond:
             case Interval::FiveSeconds:
             case Interval::TenSeconds:
@@ -182,6 +221,19 @@ namespace botb2 {
             case Interval::FiveThousandTicks:
             case Interval::TenThousandTicks:
                 return true;
+            case Interval::Renko_0001_Percent:
+            case Interval::Renko_0005_Percent:
+            case Interval::Renko_001_Percent:
+            case Interval::Renko_005_Percent:
+            case Interval::Renko_01_Percent:
+            case Interval::Renko_05_Percent:
+            case Interval::Renko_1_Percent:
+            case Interval::Renko_2_Percent:
+            case Interval::Renko_3_Percent:
+            case Interval::Renko_5_Percent:
+            case Interval::Renko_10_Percent:
+            case Interval::Renko_20_Percent:
+            case Interval::Renko_30_Percent:
             case Interval::OneSecond:
             case Interval::FiveSeconds:
             case Interval::TenSeconds:
@@ -207,7 +259,116 @@ namespace botb2 {
             default:
                 std::cerr << UnknownIntervalErrorMsg;
                 return false;
+        }
+    }
+
+    inline static bool isTimeInterval(const Interval &interval) {
+        switch (interval) {
+            case Interval::Renko_0001_Percent:
+            case Interval::Renko_0005_Percent:
+            case Interval::Renko_001_Percent:
+            case Interval::Renko_005_Percent:
+            case Interval::Renko_01_Percent:
+            case Interval::Renko_05_Percent:
+            case Interval::Renko_1_Percent:
+            case Interval::Renko_2_Percent:
+            case Interval::Renko_3_Percent:
+            case Interval::Renko_5_Percent:
+            case Interval::Renko_10_Percent:
+            case Interval::Renko_20_Percent:
+            case Interval::Renko_30_Percent:
+            case Interval::FiveTicks:
+            case Interval::TenTicks:
+            case Interval::FifteenTicks:
+            case Interval::TwentyTicks:
+            case Interval::FiftyTicks:
+            case Interval::HundredTicks:
+            case Interval::TwoHundredTicks:
+            case Interval::FiveHundredTicks:
+            case Interval::ThousandTicks:
+            case Interval::FiveThousandTicks:
+            case Interval::TenThousandTicks:
+                return false;
+            case Interval::OneSecond:
+            case Interval::FiveSeconds:
+            case Interval::TenSeconds:
+            case Interval::ThirtySeconds:
+            case Interval::OneMinute:
+            case Interval::ThreeMinutes:
+            case Interval::FiveMinutes:
+            case Interval::FifteenMinutes:
+            case Interval::ThirtyMinutes:
+            case Interval::OneHour:
+            case Interval::TwoHours:
+            case Interval::FourHours:
+            case Interval::SixHours:
+            case Interval::EightHours:
+            case Interval::TwelveHours:
+            case Interval::OneDay:
+            case Interval::ThreeDays:
+            case Interval::OneWeek:
+            case Interval::OneMonth:{
+                return true;
             }
+            case Interval::Unknown:
+            default:
+                std::cerr << UnknownIntervalErrorMsg;
+                return false;
+        }
+    }
+
+    inline static bool isRenkoInterval(const Interval &interval) {
+        switch (interval) {
+            case Interval::Renko_0001_Percent:
+            case Interval::Renko_0005_Percent:
+            case Interval::Renko_001_Percent:
+            case Interval::Renko_005_Percent:
+            case Interval::Renko_01_Percent:
+            case Interval::Renko_05_Percent:
+            case Interval::Renko_1_Percent:
+            case Interval::Renko_2_Percent:
+            case Interval::Renko_3_Percent:
+            case Interval::Renko_5_Percent:
+            case Interval::Renko_10_Percent:
+            case Interval::Renko_20_Percent:
+            case Interval::Renko_30_Percent:
+                return true;
+            case Interval::FiveTicks:
+            case Interval::TenTicks:
+            case Interval::FifteenTicks:
+            case Interval::TwentyTicks:
+            case Interval::FiftyTicks:
+            case Interval::HundredTicks:
+            case Interval::TwoHundredTicks:
+            case Interval::FiveHundredTicks:
+            case Interval::ThousandTicks:
+            case Interval::FiveThousandTicks:
+            case Interval::TenThousandTicks:
+            case Interval::OneSecond:
+            case Interval::FiveSeconds:
+            case Interval::TenSeconds:
+            case Interval::ThirtySeconds:
+            case Interval::OneMinute:
+            case Interval::ThreeMinutes:
+            case Interval::FiveMinutes:
+            case Interval::FifteenMinutes:
+            case Interval::ThirtyMinutes:
+            case Interval::OneHour:
+            case Interval::TwoHours:
+            case Interval::FourHours:
+            case Interval::SixHours:
+            case Interval::EightHours:
+            case Interval::TwelveHours:
+            case Interval::OneDay:
+            case Interval::ThreeDays:
+            case Interval::OneWeek:
+            case Interval::OneMonth:{
+                return false;
+            }
+            case Interval::Unknown:
+            default:
+                std::cerr << UnknownIntervalErrorMsg;
+                return false;
         }
     }
 }

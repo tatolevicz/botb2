@@ -8,7 +8,6 @@
 #include "TickData.h"
 #include "BarData.h"
 #include "Interval.h"
-#include <vector>
 
 namespace botb2 {
 

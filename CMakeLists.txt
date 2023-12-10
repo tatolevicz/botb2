@@ -11,7 +11,19 @@ set(SOURCES
         Processor/Tickable.h
         Processor/Tickable.cpp
         Types/Interval.h
-        Processor/BarAggregator.cpp Processor/BarAggregator.h Types/TickData.h Types/BarData.h Types/TimeValue.h)
+        Processor/BarAggregator.cpp
+        Processor/BarAggregator.h
+        Types/TickData.h
+        Types/BarData.h
+        Types/TimeValue.h
+        Processor/TickProcessingStrategy.h
+        Processor/TickProcessingStrategies/TimeBasedStrategy.cpp
+        Processor/TickProcessingStrategies/TimeBasedStrategy.h
+        Processor/TickProcessingStrategies/TickBasedStrategy.cpp
+        Processor/TickProcessingStrategies/TickBasedStrategy.h
+        Processor/TickProcessingStrategies/PriceChangeBasedStrategy.cpp
+        Processor/TickProcessingStrategies/PriceChangeBasedStrategy.h
+)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
@@ -35,22 +47,10 @@ if(NOT EXISTS ${CATCH_HEADER})
     file(DOWNLOAD ${CATCH_URL} ${CATCH_HEADER})
 endif()
 
-# Lista de fontes
-set(SOURCES
-        botb2.h
-        Common/Utils.h
-        Processor/Ticker.h
-        Processor/Ticker.cpp
-        Processor/Tickable.h
-        Processor/Tickable.cpp
-        Types/BarData.h
-        Types/TickData.h
-        Types/Interval.h
-        Types/TimeValue.h
-        )
 
 set(INCLUDES
         Processor
+        Processor/TickProcessingStrategies
         Common
         Types
         dependencies/fmt/include
