@@ -19,6 +19,8 @@ namespace botb2 {
     constexpr uint64_t MillisecondsPerDay = 24 * MillisecondsPerHour;
 
     enum class Interval {
+        Renko_00001_Percent, //-> 0.0001 %
+        Renko_00005_Percent,
         Renko_0001_Percent,
         Renko_0005_Percent,
         Renko_001_Percent,
@@ -67,6 +69,8 @@ namespace botb2 {
 
     inline static std::optional<uint64_t> toMilliseconds(const Interval &interval) {
         switch (interval) {
+            case Interval::Renko_00001_Percent:
+            case Interval::Renko_00005_Percent:
             case Interval::Renko_0001_Percent:
             case Interval::Renko_0005_Percent:
             case Interval::Renko_001_Percent:
@@ -164,6 +168,8 @@ namespace botb2 {
                 return 5000;
             case Interval::TenThousandTicks:
                 return 10000;
+            case Interval::Renko_00001_Percent:
+            case Interval::Renko_00005_Percent:
             case Interval::Renko_0001_Percent:
             case Interval::Renko_0005_Percent:
             case Interval::Renko_001_Percent:
@@ -177,6 +183,68 @@ namespace botb2 {
             case Interval::Renko_10_Percent:
             case Interval::Renko_20_Percent:
             case Interval::Renko_30_Percent:
+            case Interval::OneSecond:
+            case Interval::FiveSeconds:
+            case Interval::TenSeconds:
+            case Interval::ThirtySeconds:
+            case Interval::OneMinute:
+            case Interval::ThreeMinutes:
+            case Interval::FiveMinutes:
+            case Interval::FifteenMinutes:
+            case Interval::ThirtyMinutes:
+            case Interval::OneHour:
+            case Interval::TwoHours:
+            case Interval::FourHours:
+            case Interval::SixHours:
+            case Interval::EightHours:
+            case Interval::TwelveHours:
+            case Interval::OneDay:
+            case Interval::ThreeDays:
+            case Interval::OneWeek:
+            case Interval::OneMonth:{
+                std::cerr << ConversionNotPossibleErrorMsg;
+                return std::nullopt;
+            }
+            case Interval::Unknown:
+            default: {
+                std::cerr << UnknownIntervalErrorMsg;
+                return std::nullopt;
+            }
+        }
+    }
+
+
+    inline static std::optional<double> toPercent(const Interval &interval) {
+        switch (interval) {
+            case Interval::FiveTicks:
+            case Interval::TenTicks:
+            case Interval::FifteenTicks:
+            case Interval::TwentyTicks:
+            case Interval::FiftyTicks:
+            case Interval::HundredTicks:
+            case Interval::TwoHundredTicks:
+            case Interval::FiveHundredTicks:
+            case Interval::ThousandTicks:
+            case Interval::FiveThousandTicks:
+            case Interval::TenThousandTicks:{
+                std::cerr << ConversionNotPossibleErrorMsg;
+                return std::nullopt;
+            }
+            case Interval::Renko_00001_Percent: return 0.000001;
+            case Interval::Renko_00005_Percent: return 0.000005;
+            case Interval::Renko_0001_Percent:  return 0.00001;
+            case Interval::Renko_0005_Percent:  return 0.00005;
+            case Interval::Renko_001_Percent:   return 0.0001;
+            case Interval::Renko_005_Percent:   return 0.0005;
+            case Interval::Renko_01_Percent:    return 0.001;
+            case Interval::Renko_05_Percent:    return 0.005;
+            case Interval::Renko_1_Percent:     return 0.01;
+            case Interval::Renko_2_Percent:     return 0.02;
+            case Interval::Renko_3_Percent:     return 0.03;
+            case Interval::Renko_5_Percent:     return 0.05;
+            case Interval::Renko_10_Percent:    return 0.1;
+            case Interval::Renko_20_Percent:    return 0.2;
+            case Interval::Renko_30_Percent:    return 0.3;
             case Interval::OneSecond:
             case Interval::FiveSeconds:
             case Interval::TenSeconds:
@@ -221,6 +289,8 @@ namespace botb2 {
             case Interval::FiveThousandTicks:
             case Interval::TenThousandTicks:
                 return true;
+            case Interval::Renko_00001_Percent:
+            case Interval::Renko_00005_Percent:
             case Interval::Renko_0001_Percent:
             case Interval::Renko_0005_Percent:
             case Interval::Renko_001_Percent:
@@ -264,6 +334,8 @@ namespace botb2 {
 
     inline static bool isTimeInterval(const Interval &interval) {
         switch (interval) {
+            case Interval::Renko_00001_Percent:
+            case Interval::Renko_00005_Percent:
             case Interval::Renko_0001_Percent:
             case Interval::Renko_0005_Percent:
             case Interval::Renko_001_Percent:
@@ -319,6 +391,8 @@ namespace botb2 {
 
     inline static bool isRenkoInterval(const Interval &interval) {
         switch (interval) {
+            case Interval::Renko_00001_Percent:
+            case Interval::Renko_00005_Percent:
             case Interval::Renko_0001_Percent:
             case Interval::Renko_0005_Percent:
             case Interval::Renko_001_Percent:
