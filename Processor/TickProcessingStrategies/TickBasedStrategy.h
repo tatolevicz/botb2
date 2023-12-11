@@ -11,6 +11,11 @@ namespace botb2{
     public:
         TickBasedStrategy(const Interval& interval);
         void processTick(const TickData& tick,Ticker* ticker) override;
+
+    private:
+        uint64_t _lastTime{0};
+        uint64_t _intervalTicks{0};
+        uint64_t _ticksCounter{0};
     };
 
 }

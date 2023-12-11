@@ -70,22 +70,20 @@ std::vector<TickData> loadTicksFromBarData(const std::string& filePath, Interval
 }
 
 
-std::vector<TickData> loadTicks(const std::string& filePath, Interval interval) {
+std::vector<TickData> loadTicks(const std::string& filePath) {
 
     std::vector<TickData> output;
 
     try {
         rapidcsv::Document doc(filePath, rapidcsv::LabelParams(-1, -1));
 
-        for(int i = 0; i < doc.GetRowCount(); i++)
+        for(int i = 1; i < doc.GetRowCount(); i++)
         {
             TickData tick;
 
-            auto intervalTime = toMilliseconds(interval).value();
-
             tick.value = doc.GetCell<double>(1,i);
-            tick.volume = doc.GetCell<double>(2,i);
-            tick.time = doc.GetCell<double>(3,i);
+            tick.volume = doc.GetCell<double>(3,i);
+            tick.time = doc.GetCell<uint64_t>(4,i);
 
             output.push_back(tick);
         }
@@ -165,8 +163,6 @@ TEST_CASE("TimeBasedStrategy Processing Candles CSVs", "[time_based]") {
 
 TEST_CASE("TimeBasedStrategy Processing Ticks CSVs", "[time_based]") {
 
-    Interval interval = Interval::OneMinute;
-
     std::vector<TestInfo> tests;
 
     TestInfo t1;
@@ -174,8 +170,8 @@ TEST_CASE("TimeBasedStrategy Processing Ticks CSVs", "[time_based]") {
     t1.filePath = "../../tests/BTCBUSD-trades-372.csv";
     t1.interval = Interval::OneMinute;
     t1.expectedTicksCount =  371;
-    t1.expectedOnCloseCount =  5;
-    t1.expectedOnOpenCount =  6;
+    t1.expectedOnCloseCount =  4;
+    t1.expectedOnOpenCount =  5;
     t1.expectedOnTickCount =  371;
 
     tests.push_back(t1);
@@ -183,9 +179,117 @@ TEST_CASE("TimeBasedStrategy Processing Ticks CSVs", "[time_based]") {
 
     for(auto &t : tests){
 
-        std::vector<TickData> testData = loadTicks(t.filePath, t.interval);
+        std::vector<TickData> testData = loadTicks(t.filePath);
 
-        Ticker ticker(interval);
+        Ticker ticker(t.interval);
+        auto mockTickable = std::make_shared<MockTickable>();
+
+        ticker.addTickable(mockTickable);
+
+        for (const auto& tick : testData) {
+            ticker.tick(tick);
+        }
+
+        REQUIRE(testData.size() == t.expectedTicksCount);
+        REQUIRE(mockTickable->onOpenCount == t.expectedOnOpenCount);
+        REQUIRE(mockTickable->onCloseCount == t.expectedOnCloseCount);
+        REQUIRE(mockTickable->onTickCount == t.expectedOnTickCount);
+    }
+}
+
+
+TEST_CASE("TickBasedStrategy Processing 5 Ticks CSVs", "[tick_based]") {
+
+    std::vector<TestInfo> tests;
+
+    TestInfo t1;
+
+    t1.filePath = "../../tests/BTCBUSD-trades-372.csv";
+    t1.interval = Interval::FiveTicks;
+    t1.expectedTicksCount =  371;
+    t1.expectedOnCloseCount =  74;
+    t1.expectedOnOpenCount =  75;
+    t1.expectedOnTickCount =  371;
+
+    tests.push_back(t1);
+
+    for(auto &t : tests){
+
+        std::vector<TickData> testData = loadTicks(t.filePath);
+
+        Ticker ticker(t.interval);
+        auto mockTickable = std::make_shared<MockTickable>();
+
+        ticker.addTickable(mockTickable);
+
+        for (const auto& tick : testData) {
+            ticker.tick(tick);
+        }
+
+        REQUIRE(testData.size() == t.expectedTicksCount);
+        REQUIRE(mockTickable->onOpenCount == t.expectedOnOpenCount);
+        REQUIRE(mockTickable->onCloseCount == t.expectedOnCloseCount);
+        REQUIRE(mockTickable->onTickCount == t.expectedOnTickCount);
+    }
+}
+
+
+TEST_CASE("TickBasedStrategy Processing 10 Ticks CSVs", "[tick_based]") {
+
+    std::vector<TestInfo> tests;
+
+    TestInfo t1;
+
+    t1.filePath = "../../tests/BTCBUSD-trades-372.csv";
+    t1.interval = Interval::TenTicks;
+    t1.expectedTicksCount =  371;
+    t1.expectedOnCloseCount =  37;
+    t1.expectedOnOpenCount =  38;
+    t1.expectedOnTickCount =  371;
+
+    tests.push_back(t1);
+
+    for(auto &t : tests){
+
+        std::vector<TickData> testData = loadTicks(t.filePath);
+
+        Ticker ticker(t.interval);
+        auto mockTickable = std::make_shared<MockTickable>();
+
+        ticker.addTickable(mockTickable);
+
+        for (const auto& tick : testData) {
+            ticker.tick(tick);
+        }
+
+        REQUIRE(testData.size() == t.expectedTicksCount);
+        REQUIRE(mockTickable->onOpenCount == t.expectedOnOpenCount);
+        REQUIRE(mockTickable->onCloseCount == t.expectedOnCloseCount);
+        REQUIRE(mockTickable->onTickCount == t.expectedOnTickCount);
+    }
+}
+
+
+TEST_CASE("TickBasedStrategy Processing 1000 Ticks CSVs", "[tick_based]") {
+
+    std::vector<TestInfo> tests;
+
+    TestInfo t1;
+
+    t1.filePath = "../../tests/BTCBUSD-trades-372.csv";
+    t1.interval = Interval::ThousandTicks;
+    t1.expectedTicksCount =  371;
+    t1.expectedOnCloseCount =  0;
+    t1.expectedOnOpenCount =  1;
+    t1.expectedOnTickCount =  371;
+
+    tests.push_back(t1);
+
+    for(auto &t : tests){
+
+        std::vector<TickData> testData = loadTicks(t.filePath);
+
+        Ticker ticker(t.interval);
         auto mockTickable = std::make_shared<MockTickable>();
 
         ticker.addTickable(mockTickable);

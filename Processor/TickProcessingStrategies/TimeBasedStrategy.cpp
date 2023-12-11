@@ -13,10 +13,14 @@ namespace botb2 {
         if(timeResult.has_value())
             _intervalTime = timeResult.value();
         else
-            assert(false && "Error getting time result!");
+            assert(false && "Error getting time result!");//TODO:: log
     }
 
     void TimeBasedStrategy::processTick(const TickData& tick, Ticker* ticker) {
+
+        //ignores some wrong tick
+        if(tick.time < _lastTime)
+            return;//TODO:: log
 
         if(_lastTime == 0) { // Tratamento para o primeiro tick
             // Ajustar _lastTime para o início do intervalo atual
