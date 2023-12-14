@@ -12,7 +12,7 @@ namespace botb2 {
     {
         auto percentResult = toPercent(_interval);
         if (percentResult.has_value())
-            _priceChangeThreshold = percentResult.value();
+            _percentChangeThreshold = percentResult.value();
         else
             assert(false && "Error getting percent result!"); // TODO: log
     }
@@ -26,51 +26,85 @@ namespace botb2 {
         if (_lastTime == 0) {
             _lastPrice = tick.value;
             _lastTime = tick.time;
+            _aggregator->addTick(tick);
+            auto barData = _aggregator->getBarData();
+            for(auto &t : ticker->getTickables()){
+                t->onOpen(barData);
+            }
             return;
         }
 
         double priceChangePercent = std::abs((tick.value - _lastPrice) / _lastPrice);
 
-        if (priceChangePercent >= _priceChangeThreshold) {
-            // Calcular o preço exato que atende ao threshold
-            double thresholdPrice = _lastPrice * (1 + _priceChangeThreshold * (tick.value > _lastPrice ? 1 : -1));
+        //1 - verifica se o delta já é maior do que o treshhold
+            //1.1 - se for identifica o preço limite da barra do treshhold
+                //1.1.1 se sobrar algo além do treshhold guarda o quanto desse tick
+                //1.1.2 fecha a barra com o tresh hold limite  e reinicia o processo com o restante do que passou recursivamente
+            //1.2 guarda o estado antes da barra pra saber se é nova ou nao
+            //1.3 faz o tick dos tickables
+            //1.4 verifica se é barra nova e caso positivo faz o onOpen
 
-            // Processar como se o tick tivesse esse valor de threshold
-            closesBar(thresholdPrice, ticker);
+        //1
+        if (priceChangePercent >= _percentChangeThreshold) {
 
-            // Definir _lastPrice para o preço de threshold
+            auto directionSignal =  (tick.value > _lastPrice ? 1 : -1);
+            //1.1
+            double thresholdPrice = _lastPrice * (1 + _percentChangeThreshold * directionSignal);
+
+            //1.1.1
+            _excessDeltaPercent = priceChangePercent - _percentChangeThreshold;
+
+            //1.1.2
+            auto deltaPercent = _percentChangeThreshold/priceChangePercent;
+
+            TickData closingTick;
+            closingTick.volume =  deltaPercent * tick.volume;
+            closingTick.value = thresholdPrice;
+            closingTick.time = tick.time;
+
+            closesBar(closingTick, ticker);
             _lastPrice = thresholdPrice;
 
-            // Verificar se o excesso atinge um novo threshold
-            priceChangePercent = std::abs((tick.value - _lastPrice) / _lastPrice);
-            if (priceChangePercent >= _priceChangeThreshold) {
-                // Acumular o excesso para a próxima barra
-                _excessPrice = tick.value;
-            } else {
-                _excessPrice = 0; // Resetar o excesso se não atingir um novo threshold
+            auto newPrice = tick.value;//thresholdPrice * (1 + (_excessDeltaPercent * directionSignal));
+            TickData recursiveTick;
+            recursiveTick.volume = (1 - deltaPercent) * tick.volume;
+            recursiveTick.value = newPrice;
+            recursiveTick.time = tick.time;
+
+
+            processTick(recursiveTick, ticker);
+
+        }
+        else{
+            _excessDeltaPercent = 0;
+            auto isNewBar = _aggregator->isNewBar();
+            _aggregator->addTick(tick);
+            auto barData = _aggregator->getBarData();
+
+            for(auto &t : ticker->getTickables()){
+                t->onTick(barData);
             }
 
-        } else if (_excessPrice > 0) {
-            // Se houver excesso acumulado, verificar se ele atinge um novo threshold
-            priceChangePercent = std::abs((tick.value - _excessPrice) / _excessPrice);
-            if (priceChangePercent >= _priceChangeThreshold) {
-                closesBar(tick.value, ticker);
-                _lastPrice = tick.value;
-                _excessPrice = 0; // Resetar o excesso após processar a nova barra
+            if(isNewBar){
+                for(auto &t : ticker->getTickables()){
+                    t->onOpen(barData);
+                }
             }
+
+            _lastPrice = tick.value;
         }
     }
 
-    void PriceChangeBasedStrategy::closesBar(double closePrice, Ticker *ticker) {
-        // Obter os dados da barra atual
-        auto barData = _aggregator->getBarData();
-        barData.close = closePrice; // Definir o preço de fechamento
+    void PriceChangeBasedStrategy::closesBar(const TickData& tick, Ticker *ticker) {
 
-        // Notificar todos os Tickable com onClose
+        _aggregator->addTick(tick);
+
+        auto barData = _aggregator->getBarData();
+
         for (auto &t : ticker->getTickables()) {
             t->onClose(barData);
         }
-        // Resetar o agregador para a próxima barra
+
         _aggregator->reset();
     }
 }

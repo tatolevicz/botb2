@@ -2,10 +2,9 @@ cmake_minimum_required(VERSION 3.12)
 
 project(botb2 VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
-
-# Define BUILD_TESTING para ON por padrão
+#
+## Define BUILD_TESTING para ON por padrão
 option(BUILD_TESTING "Build the testing tree." ON)
-
 
 set(SOURCES
         botb2.h
@@ -28,7 +27,7 @@ set(SOURCES
         Processor/TickProcessingStrategies/PriceChangeBasedStrategy.cpp
         Processor/TickProcessingStrategies/PriceChangeBasedStrategy.h
         tests/MockTickable.h
-)
+        main.cpp)
 
 add_library(${PROJECT_NAME} STATIC ${SOURCES})
 
@@ -72,6 +71,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     fmt
     rapidcsv
 )
+
+#build executable
+add_executable(TstApp main.cpp)
 
 if(BUILD_TESTING)
     add_subdirectory(tests)

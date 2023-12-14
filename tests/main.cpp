@@ -304,3 +304,38 @@ TEST_CASE("TickBasedStrategy Processing 1000 Ticks CSVs", "[tick_based]") {
         REQUIRE(mockTickable->onTickCount == t.expectedOnTickCount);
     }
 }
+
+TEST_CASE("PriceChangeBasedStrategy Processing 1 % CSVs", "[tick_based]") {
+
+    std::vector<TestInfo> tests;
+
+    TestInfo t1;
+
+    t1.filePath = "../../tests/BTCBUSD-trades-2.csv";
+    t1.interval = Interval::Renko_1_Percent;
+    t1.expectedTicksCount =  3;
+    t1.expectedOnCloseCount =  0;
+    t1.expectedOnOpenCount =  0;
+    t1.expectedOnTickCount =  0;
+
+    tests.push_back(t1);
+
+    for(auto &t : tests){
+
+        std::vector<TickData> testData = loadTicks(t.filePath);
+
+        Ticker ticker(t.interval);
+        auto mockTickable = std::make_shared<MockTickable>();
+
+        ticker.addTickable(mockTickable);
+
+        for (const auto& tick : testData) {
+            ticker.tick(tick);
+        }
+
+        REQUIRE(testData.size() == t.expectedTicksCount);
+        REQUIRE(mockTickable->onOpenCount == t.expectedOnOpenCount);
+        REQUIRE(mockTickable->onCloseCount == t.expectedOnCloseCount);
+        REQUIRE(mockTickable->onTickCount == t.expectedOnTickCount);
+    }
+}

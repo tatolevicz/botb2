@@ -13,11 +13,11 @@ namespace botb2{
         PriceChangeBasedStrategy(const Interval& interval);
         void processTick(const TickData& tick,Ticker* ticker) override;\
     private:
-        void closesBar(double closePrice, Ticker* ticker);
+        void closesBar(const TickData& tick, Ticker* ticker);
         uint64_t _lastTime{0};
-        double _priceChangeThreshold{0};
+        double _percentChangeThreshold{0};
         double _lastPrice{0};
-        double _excessPrice{0};
+        double _excessDeltaPercent{0};
     };
 
 }
