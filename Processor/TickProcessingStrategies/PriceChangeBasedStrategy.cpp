@@ -71,9 +71,7 @@ namespace botb2 {
             recursiveTick.value = newPrice;
             recursiveTick.time = tick.time;
 
-
             processTick(recursiveTick, ticker);
-
         }
         else{
             _excessDeltaPercent = 0;
