@@ -314,9 +314,9 @@ TEST_CASE("PriceChangeBasedStrategy Processing 1 % CSVs", "[tick_based]") {
     t1.filePath = "../../tests/BTCBUSD-trades-2.csv";
     t1.interval = Interval::Renko_1_Percent;
     t1.expectedTicksCount =  3;
-    t1.expectedOnCloseCount =  0;
-    t1.expectedOnOpenCount =  0;
-    t1.expectedOnTickCount =  0;
+    t1.expectedOnCloseCount =  7;
+    t1.expectedOnOpenCount =  2;
+    t1.expectedOnTickCount =  3;
 
     tests.push_back(t1);
 
