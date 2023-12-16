@@ -23,6 +23,7 @@ namespace botb2{
         if (_isNewBar) {
             resetBar();
             _currentBar.openTime = tick.time;
+            _currentBar.closeTime = tick.time;
             _currentBar.open = tick.value;
             _currentBar.high = tick.value;
             _currentBar.low = tick.value;

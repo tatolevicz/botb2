@@ -14,6 +14,7 @@ namespace botb2{
         void processTick(const TickData& tick,Ticker* ticker) override;\
     private:
         void closesBar(const TickData& tick, Ticker* ticker);
+        void opensBar(const TickData& tick, Ticker* ticker);
         uint64_t _lastTime{0};
         double _percentChangeThreshold{0};
         double _lastPrice{0};

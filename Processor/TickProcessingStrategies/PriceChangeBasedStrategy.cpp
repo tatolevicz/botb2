@@ -26,12 +26,7 @@ namespace botb2 {
         if (_lastTime == 0) {
             _lastPrice = tick.value;
             _lastTime = tick.time;
-            _aggregator->addTick(tick);
-            auto barData = _aggregator->getBarData();
-            for(auto &t : ticker->getTickables()){
-                t->onOpen(barData);
-            }
-            return;
+            opensBar(tick,ticker);
         }
 
         double priceChangePercent = std::abs((tick.value - _lastPrice) / _lastPrice);
@@ -65,32 +60,38 @@ namespace botb2 {
             closesBar(closingTick, ticker);
             _lastPrice = thresholdPrice;
 
-            auto newPrice = tick.value;//thresholdPrice * (1 + (_excessDeltaPercent * directionSignal));
             TickData recursiveTick;
             recursiveTick.volume = (1 - deltaPercent) * tick.volume;
-            recursiveTick.value = newPrice;
+            recursiveTick.value = tick.value;
             recursiveTick.time = tick.time;
 
+            //before process the tick again check if it is already bigger than the threshold to open the next bar already
+            double newPriceChangePercent = std::abs((tick.value - _lastPrice) / _lastPrice);
+            if(newPriceChangePercent >= _percentChangeThreshold)
+            {
+                TickData openingTick;
+                openingTick.volume = 0;
+                openingTick.value = _lastPrice;
+                openingTick.time = tick.time;
+                opensBar(openingTick,ticker);
+            }
+
             processTick(recursiveTick, ticker);
+            return;
         }
-        else{
-            _excessDeltaPercent = 0;
-            auto isNewBar = _aggregator->isNewBar();
-            _aggregator->addTick(tick);
-            auto barData = _aggregator->getBarData();
 
-            for(auto &t : ticker->getTickables()){
-                t->onTick(barData);
-            }
+        _excessDeltaPercent = 0;
 
-            if(isNewBar){
-                for(auto &t : ticker->getTickables()){
-                    t->onOpen(barData);
-                }
-            }
+        if(_aggregator->isNewBar())
+            opensBar(tick, ticker);
 
-            _lastPrice = tick.value;
+        auto barData = _aggregator->getBarData();
+
+        for(auto &t : ticker->getTickables()){
+            t->onTick(barData);
         }
+
+        _lastPrice = tick.value;
     }
 
     void PriceChangeBasedStrategy::closesBar(const TickData& tick, Ticker *ticker) {
@@ -104,5 +105,14 @@ namespace botb2 {
         }
 
         _aggregator->reset();
+    }
+
+    void PriceChangeBasedStrategy::opensBar(const TickData& tick, Ticker *ticker) {
+        _aggregator->addTick(tick);
+        auto barData = _aggregator->getBarData();
+
+        for (auto &t : ticker->getTickables()) {
+            t->onOpen(barData);
+        }
     }
 }
