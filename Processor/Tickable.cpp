@@ -14,7 +14,7 @@ namespace botb2 {
 
     void ITickable::onOpen(const BarData &data) {}
 
-    void ITickable::onTick(const BarData &data) {}
+    void ITickable::onTick(const TickData &data, const BarData& currentBar) {}
 
     void ITickable::onClose(const BarData &data) {}
 

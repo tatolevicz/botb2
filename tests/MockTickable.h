@@ -13,20 +13,23 @@ public:
     int onOpenCount = 0;
     int onCloseCount = 0;
     int onTickCount = 0;
+    double accumulatedVolume = 0;
+    double accumulatedOnTickVolume = 0;
+
 
     void onOpen(const BarData& data) override {
         onOpenCount++;
-        // Adicionalmente, armazene ou verifique algo sobre 'data' se necessário
     }
 
     void onClose(const BarData& data) override {
         onCloseCount++;
-        // Adicionalmente, armazene ou verifique algo sobre 'data' se necessário
+        accumulatedVolume += data.volume;
     }
 
-    void onTick(const BarData& data) override {
+    void onTick(const TickData& data, const BarData& currentBar) override {
+        accumulatedOnTickVolume += data.volume;
+//        accumulatedVolume += currentBar.volume;
         onTickCount++;
-        // Adicionalmente, armazene ou verifique algo sobre 'data' se necessário
     }
 };
 

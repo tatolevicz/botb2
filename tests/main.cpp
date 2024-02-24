@@ -337,5 +337,9 @@ TEST_CASE("PriceChangeBasedStrategy Processing 1 % CSVs", "[tick_based]") {
         REQUIRE(mockTickable->onOpenCount == t.expectedOnOpenCount);
         REQUIRE(mockTickable->onCloseCount == t.expectedOnCloseCount);
         REQUIRE(mockTickable->onTickCount == t.expectedOnTickCount);
+
+        //check internal BarData values
+        //should be 454,16...
+        REQUIRE(mockTickable->accumulatedOnTickVolume == mockTickable->accumulatedVolume);
     }
 }

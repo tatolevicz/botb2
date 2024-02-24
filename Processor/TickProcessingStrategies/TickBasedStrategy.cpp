@@ -52,9 +52,8 @@ namespace botb2 {
         _aggregator->addTick(tick);
 
         auto barData = _aggregator->getBarData();
-
         for(auto &t : ticker->getTickables()){
-            t->onTick(barData);
+            t->onTick(tick, barData);
         }
 
         //now trigger the onOpen if it's a new bar

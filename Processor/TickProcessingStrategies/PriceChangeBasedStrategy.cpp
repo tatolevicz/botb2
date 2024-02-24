@@ -17,39 +17,14 @@ namespace botb2 {
             assert(false && "Error getting percent result!"); // TODO: log
     }
 
-    void PriceChangeBasedStrategy::processTick(const TickData& tick, Ticker* ticker) {
+    void PriceChangeBasedStrategy::recursiveProcessTick(const TickData& tick,Ticker* ticker, double priceChangePercent, bool isInternalCall){
 
-        //ignores some wrong tick
-        if(tick.time < _lastTime)
-            return;//TODO:: log
-
-        if (_lastTime == 0) {
-            _lastPrice = tick.value;
-            _lastTime = tick.time;
-            opensBar(tick,ticker);
-        }
-
-        double priceChangePercent = std::abs((tick.value - _lastPrice) / _lastPrice);
-
-        //1 - verifica se o delta já é maior do que o treshhold
-            //1.1 - se for identifica o preço limite da barra do treshhold
-                //1.1.1 se sobrar algo além do treshhold guarda o quanto desse tick
-                //1.1.2 fecha a barra com o tresh hold limite  e reinicia o processo com o restante do que passou recursivamente
-            //1.2 guarda o estado antes da barra pra saber se é nova ou nao
-            //1.3 faz o tick dos tickables
-            //1.4 verifica se é barra nova e caso positivo faz o onOpen
-
-        //1
         if (priceChangePercent >= _percentChangeThreshold) {
 
             auto directionSignal =  (tick.value > _lastPrice ? 1 : -1);
-            //1.1
+
             double thresholdPrice = _lastPrice * (1 + _percentChangeThreshold * directionSignal);
 
-            //1.1.1
-            _excessDeltaPercent = priceChangePercent - _percentChangeThreshold;
-
-            //1.1.2
             auto deltaPercent = _percentChangeThreshold/priceChangePercent;
 
             TickData closingTick;
@@ -57,7 +32,8 @@ namespace botb2 {
             closingTick.value = thresholdPrice;
             closingTick.time = tick.time;
 
-            closesBar(closingTick, ticker);
+            closesBar(closingTick);
+
             _lastPrice = thresholdPrice;
 
             TickData recursiveTick;
@@ -67,52 +43,86 @@ namespace botb2 {
 
             //before process the tick again check if it is already bigger than the threshold to open the next bar already
             double newPriceChangePercent = std::abs((tick.value - _lastPrice) / _lastPrice);
-            if(newPriceChangePercent >= _percentChangeThreshold)
-            {
+            if (newPriceChangePercent >= _percentChangeThreshold) {
                 TickData openingTick;
                 openingTick.volume = 0;
                 openingTick.value = _lastPrice;
                 openingTick.time = tick.time;
-                opensBar(openingTick,ticker);
+                opensBar(openingTick);
             }
 
-            processTick(recursiveTick, ticker);
+            recursiveProcessTick(recursiveTick, ticker, newPriceChangePercent, true);
+        }
+    }
+
+    void PriceChangeBasedStrategy::processTick(const TickData& tick, Ticker* ticker) {
+
+        //ignores some wrong tick
+        if(tick.time < _lastTime)
+            return;//TODO:: log
+
+        if (_lastTime == 0) {
+            _lastPrice = tick.value;
+            _lastTime = tick.time;
+
+            TickData openingTick;
+            openingTick.volume = tick.volume;
+            openingTick.value = _lastPrice;
+            openingTick.time = _lastTime;
+            opensBar(openingTick);
+
+            notifyOnTick(tick, ticker);
+            notifyOnOpen(ticker);
             return;
         }
 
-        _excessDeltaPercent = 0;
+        double priceChangePercent = std::abs((tick.value - _lastPrice) / _lastPrice);
 
-        if(_aggregator->isNewBar())
-            opensBar(tick, ticker);
-
-        auto barData = _aggregator->getBarData();
-
-        for(auto &t : ticker->getTickables()){
-            t->onTick(barData);
+        if (priceChangePercent < _percentChangeThreshold) {
+            ticksBar(tick);
+            notifyOnTick(tick, ticker);
+            _lastPrice = tick.value;
+            return;
         }
 
-        _lastPrice = tick.value;
+        recursiveProcessTick(tick, ticker, priceChangePercent);
+
     }
 
-    void PriceChangeBasedStrategy::closesBar(const TickData& tick, Ticker *ticker) {
-
-        _aggregator->addTick(tick);
-
-        auto barData = _aggregator->getBarData();
-
+    void PriceChangeBasedStrategy::notifyOnOpen(Ticker *ticker) {
         for (auto &t : ticker->getTickables()) {
-            t->onClose(barData);
+            t->onOpen(_currentBar);
         }
+    }
 
+    void PriceChangeBasedStrategy::notifyOnClose(Ticker *ticker) {
+        for (auto &t : ticker->getTickables()) {
+            t->onClose(_currentBar);
+        }
+    }
+
+    void PriceChangeBasedStrategy::notifyOnTick(const TickData &tick, Ticker *ticker) {
+        for(auto &t : ticker->getTickables()){
+            t->onTick(tick, _currentBar);
+        }
+    }
+
+    void PriceChangeBasedStrategy::closesBar(const TickData& tick) {
+        _aggregator->addTick(tick);
+        _currentBar = _aggregator->getBarData();
         _aggregator->reset();
     }
 
-    void PriceChangeBasedStrategy::opensBar(const TickData& tick, Ticker *ticker) {
+    void PriceChangeBasedStrategy::opensBar(const TickData& tick) {
+        _aggregator->reset();
         _aggregator->addTick(tick);
-        auto barData = _aggregator->getBarData();
-
-        for (auto &t : ticker->getTickables()) {
-            t->onOpen(barData);
-        }
+        _currentBar = _aggregator->getBarData();
     }
+
+    void PriceChangeBasedStrategy::ticksBar(const TickData& tick) {
+        _aggregator->addTick(tick);
+        _currentBar = _aggregator->getBarData();
+    }
+
+
 }

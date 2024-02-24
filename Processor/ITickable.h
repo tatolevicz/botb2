@@ -26,7 +26,7 @@ namespace botb2 {
 
         virtual void onClose(const BarData& data);
 
-        virtual void onTick(const BarData& data);
+        virtual void onTick(const TickData& data, const BarData& currentBar);
 
         void setPriority(int priority);
 
